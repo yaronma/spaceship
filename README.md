@@ -8,6 +8,6 @@ The Python-based spaceship logic implementation running on the Raspberry-Pi (any
 The Arduino-based hardware control module
 # spaceship-hardware
 The proprietary hardware modules: 
-#### The actuator control (based on the ULN2003A)
+#### The actuator control (Based on ULN2003A)
 #### The fuel and oxygen levels bar-graph display (Based on MAX7219)
 
