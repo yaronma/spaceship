@@ -41,3 +41,13 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+spaceship-rpi/.idea/.name
+spaceship-rpi/.idea/workspace.xml
+spaceship-rpi/.idea/misc.xml
+spaceship-rpi/.idea/spaceship-rpi.iml
+spaceship-rpi/__pycache__/arduino.cpython-34.pyc
+spaceship-rpi/__pycache__/dummyserial.cpython-34.pyc
+spaceship-rpi/__pycache__/sounds.cpython-34.pyc
+spaceship-rpi/__pycache__/webinterface.cpython-34.pyc
+spaceship-rpi/.idea/modules.xml
+spaceship-rpi/.idea/vcs.xml
