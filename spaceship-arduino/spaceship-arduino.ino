@@ -32,8 +32,6 @@
 #define SPACESHIP_DOWN_BUTTON_LED_ID 38
 #define SPACESHIP_ON_BUTTON_LED_ID   42
 #define SOUND_BUTTON_LED_ID  37
-#define LEFT_ENGINE_ID       36
-#define RIGHT_ENGINE_ID      35
 
 //////////////////////////////////////////////////////////////
 // We intentionally seperate the led id and the led pin in 
@@ -46,8 +44,7 @@
 #define SPACESHIP_DOWN_BUTTON_LED 38
 #define SPACESHIP_ON_BUTTON_LED   42
 #define SOUND_BUTTON_LED  37
-#define LEFT_ENGINE       36
-#define RIGHT_ENGINE      35
+
 
 // Protocol
 #define FLAG 85 // Byte that marks the start of protocol packet (HEX 0x55)
@@ -95,8 +92,7 @@ byte ledPins[NUM_LEDS] = {OXYGEN_BUTTON_LED, FUEL_BUTTON_LED, LIGHTS_BUTTON_LED,
 // [For simplicity, we only handle push-buttons presses events,  
 // we ignore push-buttons releases]
 //////////////////////////////////////////////////////////////
-DebounceButton oxygen(
-, EVT_SC_OXYGEN_PRESSED, DEBOUNCE_INTERVAL_MS);
+DebounceButton oxygen(OXYGEN_BUTTON, EVT_SC_OXYGEN_PRESSED, DEBOUNCE_INTERVAL_MS);
 DebounceButton fuel(FUEL_BUTTON, EVT_SC_FUEL_PRESSED, DEBOUNCE_INTERVAL_MS);
 DebounceButton lights(LIGHTS_BUTTON, EVT_SC_LIGHTS_PRESSED ,DEBOUNCE_INTERVAL_MS);
 DebounceButton sound(SOUND_BUTTON, EVT_SC_SOUND_PRESSED, DEBOUNCE_INTERVAL_MS);
@@ -146,8 +142,8 @@ void sendCommand(unsigned char code, unsigned char key, unsigned char value) {
 
   // For now just send the button id
   Serial2.write(key);
-  Serial2.write(0);
-  Serial2.write(0);
+  Serial2.write(code);
+  Serial2.write(value);
   
   Serial.write("Button ");
   Serial.write(key);
@@ -316,7 +312,7 @@ void testLeds() {
       digitalWrite(ledPins[i], state);
     }
   
-    state = ~state;
+    state = !state;
 
     delay(500);
   }
@@ -371,11 +367,18 @@ void loop() {
         sendCommand(CMD_BUTTON, buttons[i]->getId(), CMD_ROSE);
       }      
 
-      // For now we ignore key releases
+      // We handle key releases only on motors switch - bit ugly
       if (buttons[i] -> fell()) {
-        Serial.write("Button release detected\n");
-        // Do nothing...
-        //sendCommand(CMD_BUTTON, buttons[i].getId(), CMD_FELL);
+        Serial.write("Button release detected\n");    
+        if (buttons[i]->getId() == leftEngine.getId()) {
+            Serial.write("Left engine release detected\n");    
+            sendCommand(CMD_BUTTON, EVT_SC_LEFT_ENGINE_RELEASED, CMD_FELL);
+        }
+        
+        if (buttons[i]->getId() == rightEngine.getId()) {
+            Serial.write("Right engine release detected\n");    
+            sendCommand(CMD_BUTTON, EVT_SC_RIGHT_ENGINE_RELEASED, CMD_FELL);
+        }
       }      
    }  
 }

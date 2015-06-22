@@ -26,18 +26,20 @@ class Arduino:
 
     # LEDs enumeration
     SPACESHIP_FUEL_LED_ID = 43
-    SPACESHIP_OXYGEN_LED_ID = 12
+    SPACESHIP_OXYGEN_LED_ID = 41
     SPACESHIP_ON_LED_ID = 42
-    SPACESHIP_LIGHTS_LED_ID = 14
-    SPACESHIP_SOUNDS_LED_ID = 15
-    SPACESHIP_UP_LED_ID = 16
-    SPACESHIP_DOWN_LED_ID = 17
-    SPACESHIP_LIGHTS_ID = 18  # The ID of the actual lights (not the led on the main panel)
+    SPACESHIP_LIGHTS_LED_ID = 40
+    SPACESHIP_SOUNDS_LED_ID = 37
+    SPACESHIP_UP_LED_ID = 39
+    SPACESHIP_DOWN_LED_ID = 38
+    SPACESHIP_LIGHTS_ID = 40  # The ID of the actual lights (not the led on the main panel)
 
     # Command Types
     CMD_CHANGE_PIN = 97
     CMD_BARGRAPH = 98
     CMD_ENGINE = 99
+	
+    FLAG = 85
 
     # Bar-Graphs enumeration
     FUEL_BARGRAPH_ID = 0
@@ -102,10 +104,11 @@ class Arduino:
         self.buffer = b""
 
         # Used for debugging where the Serial port is not available
-        self.enable_serial = False
+        self.enable_serial = True
 
         if self.enable_serial:
-            self.serial = serial.Serial(self.port, 9600, timeout=1)
+            # self.serial = serial.Serial(self.port, 9600, timeout=1, bytesize=8, parity='N')
+            self.serial = serial.Serial("/dev/ttyUSB0", baudrate=57600, parity=serial.PARITY_NONE,stopbits=serial.STOPBITS_ONE, bytesize=serial.EIGHTBITS, writeTimeout = 0, timeout = 10,rtscts=False,dsrdtr=False, xonxoff=False)
             self.start()
         else:
             from dummyserial import DummySerial
@@ -211,7 +214,16 @@ class Arduino:
         self.send_command(Arduino.CMD_CHANGE_PIN, led_id, led_state)
 
     def send_command(self, command_type, command_id, value):
-        data = bytes([command_type, command_id, value])
+#        data = b'\x61\x2a\x01'
+#        data = bytearray([chr(command_type), chr(command_id), chr(value)])
+        data = bytearray([chr(Arduino.FLAG), chr(command_type), chr(command_id), chr(value)])
+#       data = bytes([command_type, command_id, value])
+#        print(type(command_type))
+#        print(bytes([command_type, command_id, value]))
+        print("Arduino: Sending: " + str(command_type) + ", " + str(command_id) + ", " + str(value))
+#        print("Binary data: ")
+#        print(data)
+        print("\n")
         self.serial.write(data)
 
     def start(self):
@@ -229,16 +241,22 @@ class Arduino:
     def handle_packet(self, data):
 
         print("Received ")
-        print(data[0], data[1], data[2])
+        print(ord(data[0]))
+        print(", ")
+        print(ord(data[1]))
+        print(", ")
+        print(ord(data[2]))
+        print("\n")
 
         # Check that we recognize this event type
-        if not data[0] in Arduino.events:
+        if not ord(data[0]) in Arduino.events:
+            print("Cannot find handler, aborting...")
             return
 
         # For now, we just send an event to the spaceship on all events
         # (only with the event id, no data)
 
-        self.spaceship.handle_user_event(data[0])
+        self.spaceship.handle_user_event(ord(data[0]))
 
     def reader(self):
             """ Read the pending protocol packets sent from the Arduino to the application """
