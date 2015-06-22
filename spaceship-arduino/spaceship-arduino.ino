@@ -12,14 +12,14 @@
 //////////////////////////////////////////////////////////////
 // Input Buttons - Pin Numbers
 //////////////////////////////////////////////////////////////
-#define OXYGEN_BUTTON       53
+#define OXYGEN_BUTTON       51
 #define FUEL_BUTTON         52
-#define LIGHTS_BUTTON       37
-#define SPACESHIP_UP_BUTTON   38
-#define SPACESHIP_DOWN_BUTTON 39
-#define LEFT_ENGINE_BUTTON  40
-#define RIGHT_ENGINE_BUTTON 41
-#define SOUND_BUTTON        44
+#define LIGHTS_BUTTON       50
+#define SPACESHIP_UP_BUTTON   49
+#define SPACESHIP_DOWN_BUTTON 48
+#define LEFT_ENGINE_BUTTON  47
+#define RIGHT_ENGINE_BUTTON 46
+#define SOUND_BUTTON        45
 #define SPACESHIP_ON_BUTTON 53
 
 //////////////////////////////////////////////////////////////
@@ -48,6 +48,9 @@
 #define SOUND_BUTTON_LED  37
 #define LEFT_ENGINE       36
 #define RIGHT_ENGINE      35
+
+// Protocol
+#define FLAG 85 // Byte that marks the start of protocol packet (HEX 0x55)
 
 boolean incoming = false;
 
@@ -92,7 +95,8 @@ byte ledPins[NUM_LEDS] = {OXYGEN_BUTTON_LED, FUEL_BUTTON_LED, LIGHTS_BUTTON_LED,
 // [For simplicity, we only handle push-buttons presses events,  
 // we ignore push-buttons releases]
 //////////////////////////////////////////////////////////////
-DebounceButton oxygen(OXYGEN_BUTTON, EVT_SC_OXYGEN_PRESSED, DEBOUNCE_INTERVAL_MS);
+DebounceButton oxygen(
+, EVT_SC_OXYGEN_PRESSED, DEBOUNCE_INTERVAL_MS);
 DebounceButton fuel(FUEL_BUTTON, EVT_SC_FUEL_PRESSED, DEBOUNCE_INTERVAL_MS);
 DebounceButton lights(LIGHTS_BUTTON, EVT_SC_LIGHTS_PRESSED ,DEBOUNCE_INTERVAL_MS);
 DebounceButton sound(SOUND_BUTTON, EVT_SC_SOUND_PRESSED, DEBOUNCE_INTERVAL_MS);
@@ -114,7 +118,7 @@ void setup() {
   Serial.begin(9600);
   Serial.println("Spaceship: Arduino controller srated!");
 
-  Serial2.begin(9600);
+  Serial2.begin(57600);
   
   // Initialize the output leds
   for (int i = 0; i < NUM_LEDS; i++) {
@@ -122,11 +126,11 @@ void setup() {
   }
 
   Serial.write("Self test started!\r\n");
-  Serial.write("Testing bar graphs");
+  Serial.write("Testing bar graphs\n");
   testBarGraphs();
-  Serial.write("Testing LEDs");
+  Serial.write("Testing LEDs\n");
   testLeds();
-  Serial.write("Self test completed");
+  Serial.write("Self test completed\n\n");
 }
 
 // Update all the inputs
@@ -147,17 +151,27 @@ void sendCommand(unsigned char code, unsigned char key, unsigned char value) {
   
   Serial.write("Button ");
   Serial.write(key);
-  Serial.write(" pressed");
+  Serial.write(" pressed\n");
 }
 
 // Called after each loop()
-void serialEvent() {
+void serialEvent2() {
     while (Serial2.available()) {
 
       Serial.write("Reading new character\r\n");
       
+      char ch = (char)Serial2.read();
+      
+      // If we received the flag, reset the input buffer
+      if (ch == FLAG) {
+        Serial.write("Received Frame Start\r\n");
+        bufferDataSize = 0;
+        incoming = false;
+        continue;
+      }
+      
       // get the new byte:
-      buffer[bufferDataSize] = (char)Serial2.read(); 
+      buffer[bufferDataSize] = ch; 
       bufferDataSize++;
  
       // Mark that we got a complete command         
@@ -310,7 +324,7 @@ void testLeds() {
 
 void loop() {
  
-    serialEvent();
+    //serialEvent();
   
     // First check if we have a pending command
     if (incoming == true) {
@@ -319,7 +333,11 @@ void loop() {
       incoming = false;
       
       Serial.write("Parsing packet ");
-      Serial.write(buffer[0]);
+      Serial.print(buffer[0], DEC);
+      Serial.write(", ");
+      Serial.print(buffer[1], DEC);
+      Serial.write(", ");
+      Serial.print(buffer[2], DEC);
       Serial.write("\n");
       
       // The command type is the first byte

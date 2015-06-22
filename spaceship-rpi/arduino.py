@@ -229,7 +229,7 @@ class Arduino:
     def handle_packet(self, data):
 
         print("Received ")
-        print(data)
+        print(data[0], data[1], data[2])
 
         # Check that we recognize this event type
         if not data[0] in Arduino.events:
