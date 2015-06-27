@@ -7,7 +7,7 @@
 class Motor 
 {
 private:  
-  int standbyPin;
+  int standby;
   int pwmB;
   int bIn1;
   int bIn2;
@@ -16,7 +16,7 @@ private:
   int aIn2;
   
 public:
-  Motor(int standbyPin, int pwmA, int aIn1, int aIn2, int pwmB, int bIn1, int bIn2); 
+  Motor(int standby, int pwmA, int aIn1, int aIn2, int pwmB, int bIn1, int bIn2); 
   
   /**
     Move specific motor at speed and direction
@@ -27,7 +27,7 @@ public:
   void move(int motor, int direction);
   void stop(int motor);
   void stop();
-  void standby();
+//  void standby();
 };
 
 #endif // _MOTOR_H_

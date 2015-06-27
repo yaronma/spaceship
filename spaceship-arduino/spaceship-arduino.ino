@@ -237,6 +237,8 @@ void changeMotoroState(byte motor, byte action) {
       if (motor == RIGHT_MOTOR || motor == BOTH_MOTORS)
         motors.stop(1);
     break;
+    default:
+      Serial.write("Unknown motor command received");
   }
 }
 

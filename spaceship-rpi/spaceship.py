@@ -443,11 +443,10 @@ class Spaceship:
     # Stops any movement (up and down)
     def stop_movement(self):
         self.move_up = False
+        self.arduino.motor_stop()
         self.arduino.move_up_led_off()
-        self.arduino.motor_stop()
-        self.move_down = False
         self.arduino.move_down_led_off()
-        self.arduino.motor_stop()
+        self.move_down = False
 
     def handle_up_pressed(self):
         logger.debug("Spaceship Up button pressed")

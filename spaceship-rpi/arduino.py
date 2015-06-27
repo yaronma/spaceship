@@ -201,13 +201,13 @@ class Arduino:
         self.led(Arduino.SPACESHIP_DOWN_LED_ID, Arduino.LED_OFF)
 
     def motor_up(self):
-        pass
+        self.send_command(Arduino.CMD_ENGINE, 3, 1)
 
     def motor_down(self):
-        pass
+        self.send_command(Arduino.CMD_ENGINE, 3, 2)
 
     def motor_stop(self):
-        pass
+        self.send_command(Arduino.CMD_ENGINE, 3, 3)
 
     # Send the Arduino a message to change the state of a specific pin
     def led(self, led_id, led_state):
