@@ -104,7 +104,7 @@ class Arduino:
         self.buffer = b""
 
         # Used for debugging where the Serial port is not available
-        self.enable_serial = True
+        self.enable_serial = False
 
         if self.enable_serial:
             # self.serial = serial.Serial(self.port, 9600, timeout=1, bytesize=8, parity='N')

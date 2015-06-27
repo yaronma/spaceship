@@ -3,7 +3,7 @@
 
 # TODO:
 # - Turn the oxygen and fuel into gauge class
-# - Turn all the buttons into classes 
+
 
 # TODO - Delete the spaceship.event_count variable and make all relevant methods static
 import os
@@ -13,6 +13,11 @@ import pygame
 from arduino import Arduino
 from sounds import Sounds
 from webinterface import WebInterface
+
+try:
+    import RPi.GPIO as GPIO
+except RuntimeError:
+    print("Error importing RPi.GPIO!")
 
 
 # pygame.USEREVENT is reserved for the Arduino originated events
@@ -42,7 +47,6 @@ SND_LOW_FUEL_WARNING = Sounds.sound_file('low_fuel.wav')
 # Spaceship Movement
 UP = 1
 DOWN = 2
-
 
 class Buttons:
     def __init__(self):
@@ -79,6 +83,18 @@ class Spaceship:
 
     def __init__(self):
         """ Initialize our spaceship object """
+
+        # The RPi Indicators
+        # The LED indicating that the spaceship app is running
+        self.spaceship_running_rpi_led = 24
+        # The LED indicating that the spaceship is turned on
+        self.spaceship_on_rpi_led = 25
+
+        GPIO.setmode(GPIO.BOARD)
+        GPIO.setup(self.spaceship_running_rpi_led, GPIO.OUT)
+        GPIO.setup(self.spaceship_on_rpi_led, GPIO.OUT)
+        GPIO.output(self.spaceship_running_rpi_led, GPIO.HIGH)
+        GPIO.output(self.spaceship_on_rpi_led, GPIO.HIGH)
 
         # The fuel gauge is in the value of 0-20. Start the spaceship fully fueld
         self.fuel_level = MAX_BARGRAPH_LEVEL
@@ -151,6 +167,8 @@ class Spaceship:
         self.arduino.fuel_led_off()
         self.arduino.move_up_led_off()
         self.arduino.move_down_led_off()
+
+        # RPi LEDs
 
     @staticmethod
     def stop_music():
