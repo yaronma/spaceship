@@ -372,15 +372,6 @@ void loop() {
       // We handle key releases only on motors switch - bit ugly
       if (buttons[i] -> fell()) {
         Serial.write("Button release detected\n");    
-        if (buttons[i]->getId() == leftEngine.getId()) {
-            Serial.write("Left engine release detected\n");    
-            sendCommand(CMD_BUTTON, EVT_SC_LEFT_ENGINE_RELEASED, CMD_FELL);
-        }
-        
-        if (buttons[i]->getId() == rightEngine.getId()) {
-            Serial.write("Right engine release detected\n");    
-            sendCommand(CMD_BUTTON, EVT_SC_RIGHT_ENGINE_RELEASED, CMD_FELL);
-        }
       }      
    }  
 }

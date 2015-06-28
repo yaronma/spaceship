@@ -2,9 +2,7 @@
 #include "Arduino.h"
 #include "motor.h"
 
-Motor::Motor(int standby, int pwmA, int aIn1, int aIn2, int 
-
-, int bIn1, int bIn2) 
+Motor::Motor(int standby, int pwmA, int aIn1, int aIn2, int pwmB, int bIn1, int bIn2) 
   {
     this->standby = standby;
     this->pwmA = pwmA;

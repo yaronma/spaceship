@@ -90,7 +90,7 @@ class Spaceship:
         # The LED indicating that the spaceship is turned on
         self.spaceship_on_rpi_led = 25
 
-        GPIO.setmode(GPIO.BOARD)
+        GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.spaceship_running_rpi_led, GPIO.OUT)
         GPIO.setup(self.spaceship_on_rpi_led, GPIO.OUT)
         GPIO.output(self.spaceship_running_rpi_led, GPIO.HIGH)
@@ -375,10 +375,15 @@ class Spaceship:
             self.play_sound(SND_NO_FUEL)
             return
 
-        # In any case play the 'Engine Starting' sound
+        # If the engine is running, turn it off
+        if self.left_engine_on:
+            self.handle_left_engine_off()
+            return
+
         self.play_sound(SND_ENGINE_STARTING)
         self.left_engine_on = True
         self.arduino.start_left_engine()
+
 
         # If this is the first engine, the spaceship is starting to use fuel and oxygen
         if not self.right_engine_on:
@@ -412,6 +417,11 @@ class Spaceship:
         # If the fuel level is 0, we are out of fuel...
         if self.fuel_level == 0:
             self.play_sound(SND_NO_FUEL)
+            return
+
+        # If the engine is running, turn it off
+        if self.right_engine_on:
+            self.handle_right_engine_off()
             return
 
         # In any case play the 'Engine Starting' sound
