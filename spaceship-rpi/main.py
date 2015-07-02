@@ -14,7 +14,7 @@ def main():
     try:
         import RPi.GPIO as GPIO
     except RuntimeError:
-        print("Error importing RPi.GPIO!")
+        from dummyrpi import DummyRpi as GPIO
 
     # Check if the PID file exists
     pid = str(os.getpid())
