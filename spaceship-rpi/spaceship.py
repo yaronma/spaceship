@@ -9,6 +9,7 @@
 import os
 import logging
 import pygame
+import time
 
 from arduino import Arduino
 from sounds import Sounds
@@ -32,7 +33,7 @@ EVT_TIMER_FILL_OXYGEN = pygame.USEREVENT + 5  # Triggered when the oxygen button
 MAX_BARGRAPH_LEVEL = 20
 FILL_TIMER = 1000
 FUEL_USAGE_TIMER = 5000
-OXYGEN_USAGE_TIMER = 60000
+OXYGEN_USAGE_TIMER = 18000
 
 # Sounds
 SND_NO_OXYGEN = Sounds.sound_file('no_oxygen.wav')
@@ -81,8 +82,13 @@ logger.debug("Spaceship application starting")
 
 class Spaceship:
 
+    volume = pygame.mixer.music.get_volume()
+
     def __init__(self):
         """ Initialize our spaceship object """
+
+        # Turn the volume off, since on startup, there is white noise
+        pygame.mixer.music.set_volume(0.0)
 
         # The RPi Indicators
         # The LED indicating that the spaceship app is running
@@ -116,6 +122,8 @@ class Spaceship:
 
         # The arduino interface
         self.arduino = Arduino(self)
+        self.arduino.reset()
+        time.sleep(5)
 
         # The web interface
         self.web_interface = WebInterface()
@@ -169,6 +177,9 @@ class Spaceship:
         self.arduino.move_down_led_off()
 
         # RPi LEDs
+
+        # Set the vaolume
+        pygame.mixer.music.set_volume(self.volume)
 
     @staticmethod
     def stop_music():
@@ -333,25 +344,21 @@ class Spaceship:
 
         # Check that the oxygen is not already full
         if self.oxygen_level == MAX_BARGRAPH_LEVEL:
-            pygame.time.set_timer(EVT_TIMER_FILL_OXYGEN, 0)
+            self.handle_oxygen_pressed()  # Simulate another press that will turn off oxygen
+            logger.debug("Fuel filling timer: Fuel is full")
             return
 
         self.oxygen_level += 1
         self.arduino.set_oxygen(self.oxygen_level)
 
     def handle_oxygen_pressed(self):
-        # Verify that the spaceship is not turned off
-        if not self.spaceship_turned_on:
-            return
+        logger.debug("Spaceship Oxygen button pressed")
 
-        # If the oxygen button is pressed or the oxygen is full,
-        # we turn oxygen filling off. (Stopping the timer, turning led off)
-        if self.oxygen_pressed or self.oxygen_level == MAX_BARGRAPH_LEVEL:
+        if self.oxygen_pressed:
             self.oxygen_pressed = False
             self.arduino.oxygen_led_off()
             pygame.time.set_timer(EVT_TIMER_FILL_OXYGEN, 0)
         else:
-            # Start the oxygen filling
             self.oxygen_pressed = True
             self.arduino.oxygen_led_on()
             pygame.time.set_timer(EVT_TIMER_FILL_OXYGEN, FILL_TIMER)

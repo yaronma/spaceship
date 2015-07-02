@@ -38,12 +38,13 @@ class Arduino:
     CMD_CHANGE_PIN = 97
     CMD_BARGRAPH = 98
     CMD_ENGINE = 99
+    CMD_RESET = 100
 	
     FLAG = 85
 
     # Bar-Graphs enumeration
-    FUEL_BARGRAPH_ID = 0
-    OXYGEN_BARGRAPH_ID = 1
+    FUEL_BARGRAPH_ID = 1
+    OXYGEN_BARGRAPH_ID = 0
 
     # Event IDs - I intentionally use ASCII values in order to be able
     # to test the web interface using only a browser
@@ -208,6 +209,9 @@ class Arduino:
 
     def motor_stop(self):
         self.send_command(Arduino.CMD_ENGINE, 3, 3)
+
+    def reset(self):
+        self.send_command(Arduino.CMD_RESET, 0, 0)
 
     # Send the Arduino a message to change the state of a specific pin
     def led(self, led_id, led_state):

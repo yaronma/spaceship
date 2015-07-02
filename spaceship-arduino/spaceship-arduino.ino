@@ -105,7 +105,7 @@ DebounceButton on(SPACESHIP_ON_BUTTON, EVT_SC_ON_PRESSED, DEBOUNCE_INTERVAL_MS);
 #define NUM_BUTTONS 9
 DebounceButton* buttons[NUM_BUTTONS] = {&on, &fuel, &oxygen, &lights, &sound, &up, &down, &leftEngine, &rightEngine};
 
-DualLedDisplay ledDisplay(12,11,10);
+DualLedDisplay ledDisplay(24, 23, 22);
 Motor motors = Motor(2,3,4,5,6,7,8);
 
 void setup() {
@@ -183,7 +183,7 @@ void serialEvent2() {
   Changes the value of the bar graph
  */
 void changeBarGraphValue(byte channel, byte value) {
-        Serial.write("Setting Led channel ");
+      Serial.write("Setting Led channel ");
       Serial.write(channel);
       Serial.write(" to value ");
       Serial.write(value);
@@ -267,6 +267,7 @@ void changePinState(byte pin, byte state) {
 #define CMD_CHANGE_PIN_STATE 97
 #define CMD_CHANGE_BRG_VALUE 98
 #define CMD_CHANGE_MOTOR_STATE 99
+#define CMD_RESET 100
 
 // Protocol Button Definitions
 #define SPACESHIP_ON_BUTTON_PRESSED  49
@@ -320,6 +321,10 @@ void testLeds() {
   }
 }
 
+void reset(){
+  asm volatile ("  jmp 0");
+}
+
 void loop() {
  
     //serialEvent();
@@ -348,6 +353,9 @@ void loop() {
           break;
         case CMD_CHANGE_MOTOR_STATE:
           changeMotoroState(buffer[1], buffer[2]);
+          break;
+        case CMD_RESET:
+          reset();
           break;
         default: 
           Serial.write("Unknown packet received ");
