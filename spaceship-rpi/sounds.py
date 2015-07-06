@@ -29,7 +29,7 @@ class Sounds:
     SND_SC_TURNED_OFF = 'spaceship_is_turned_off.wav'
     SND_SC_TURNED_OFF2 = 'spaceship_is_turned_off2.wav'
     SND_SC_TURNED_OFF_X2 = 'spaceship_is_turned_x2_off'
-    SND_SC_TURNED_OFF_X4 = 'spaceship_is_turned_x4_off'
+    SND_SC_TURNED_OFF_X4 = 'spaceship_is_turned_x4_off.ogg'
     SND_SC_TURNED_OFF_X6 = 'spaceship_is_turned_x6_off'
     SND_SC_TURNED_OFF_X8 = 'spaceship_is_turned_x8_off'
     SND_SC_TURNED_OFF_X12 = 'spaceship_is_turned_x12_off'
@@ -41,13 +41,13 @@ class Sounds:
         """
         Convert the sounds files to full path
         """
-        sc_turned_off = [Sounds.sound_file(Sounds.SND_SC_TURNED_OFF),
-                         Sounds.sound_file(Sounds.SND_SC_TURNED_OFF2),
-                         Sounds.sound_file(Sounds.SND_SC_TURNED_OFF_X2),
-                         Sounds.sound_file(Sounds.SND_SC_TURNED_OFF_X4),
-                         Sounds.sound_file(Sounds.SND_SC_TURNED_OFF_X6),
-                         Sounds.sound_file(Sounds.SND_SC_TURNED_OFF_X8),
-                         Sounds.sound_file(Sounds.SND_SC_TURNED_OFF_X12)]
+        self.sc_turned_off = [Sounds.sound_file(Sounds.SND_SC_TURNED_OFF),
+                              Sounds.sound_file(Sounds.SND_SC_TURNED_OFF2),
+                              Sounds.sound_file(Sounds.SND_SC_TURNED_OFF_X2),
+                              Sounds.sound_file(Sounds.SND_SC_TURNED_OFF_X4),
+                              Sounds.sound_file(Sounds.SND_SC_TURNED_OFF_X6),
+                              Sounds.sound_file(Sounds.SND_SC_TURNED_OFF_X8),
+                              Sounds.sound_file(Sounds.SND_SC_TURNED_OFF_X12)]
 
         self.last_turned_off = -1
 

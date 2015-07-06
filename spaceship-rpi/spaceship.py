@@ -57,6 +57,7 @@ class Buttons:
 os.environ["SDL_VIDEODRIVER"] = "dummy"
 
 # Initialize PyGame
+pygame.mixer.pre_init(44100, 16, 2, 4096)  # frequency, size, channels, buffersize
 pygame.init()
 pygame.display.set_mode((1, 1))
 
@@ -418,7 +419,7 @@ class Spaceship:
 
         # If the spaceship is not turned on, play sound
         if not self.spaceship_turned_on:
-            self.play_sound(SND_SC_TURNED_OFF)
+            self.play_sound(self.sounds.spaceship_turned_off())
             return
 
         # If the fuel level is 0, we are out of fuel...
