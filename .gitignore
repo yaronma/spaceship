@@ -51,3 +51,5 @@ spaceship-rpi/__pycache__/sounds.cpython-34.pyc
 spaceship-rpi/__pycache__/webinterface.cpython-34.pyc
 spaceship-rpi/.idea/modules.xml
 spaceship-rpi/.idea/vcs.xml
+spaceship-rpi/__pycache__/arduino.cpython-33.pyc
+*.pyc
