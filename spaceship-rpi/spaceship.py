@@ -83,6 +83,7 @@ logger.debug("Spaceship application starting")
 
 class Spaceship:
 
+    # Get current volume settings
     volume = pygame.mixer.music.get_volume()
 
     def __init__(self):
@@ -158,6 +159,7 @@ class Spaceship:
 
         # Initialize the spaceship controls
         self.init()
+        self.play_sound(self.sounds.spaceship_ready())
 
     def init(self):
 
@@ -177,9 +179,7 @@ class Spaceship:
         self.arduino.move_up_led_off()
         self.arduino.move_down_led_off()
 
-        # RPi LEDs
-
-        # Set the vaolume
+        # Set the volume
         pygame.mixer.music.set_volume(self.volume)
 
     @staticmethod

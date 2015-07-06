@@ -27,29 +27,42 @@ class Sounds:
 
     # Spaceship is Off Sounds
     SND_SC_TURNED_OFF = 'spaceship_is_turned_off.wav'
-    SND_SC_TURNED_OFF2 = 'spaceship_is_turned_off2.wav'
-    SND_SC_TURNED_OFF_X2 = 'spaceship_is_turned_x2_off'
-    SND_SC_TURNED_OFF_X4 = 'spaceship_is_turned_x4_off.ogg'
-    SND_SC_TURNED_OFF_X6 = 'spaceship_is_turned_x6_off'
-    SND_SC_TURNED_OFF_X8 = 'spaceship_is_turned_x8_off'
-    SND_SC_TURNED_OFF_X12 = 'spaceship_is_turned_x12_off'
+    SND_SC_TURNED_OFF_X4 = 'spaceship_is_turned_x4_off.wav'
+    SND_SC_TURNED_OFF_X6 = 'spaceship_is_turned_x6_off.wav'
+    SND_SC_TURNED_OFF_X8 = 'spaceship_is_turned_x8_off.wav'
+    SND_SC_TURNED_OFF_X12 = 'spaceship_is_turned_x12_off.wav'
+
+    SND_DONT_MAKE_ME_CRAZY = 'dont_make_me_crazy.wav'
 
     # Fuel is Low Sounds
     SND_LOW_FUEL_WARNING = 'low_fuel.wav'
+
+    # Lights ON/OFF
+    SND_LIGHTS_ON = ''
+    SND_LIGHTS_OFF = ''
+
+    # Movements
+    SND_SC_UP = 'spaceship_up.wav'
+    SND_SC_DOWN = 'spaceship_down.wav'
+
+
 
     def __init__(self):
         """
         Convert the sounds files to full path
         """
         self.sc_turned_off = [Sounds.sound_file(Sounds.SND_SC_TURNED_OFF),
-                              Sounds.sound_file(Sounds.SND_SC_TURNED_OFF2),
-                              Sounds.sound_file(Sounds.SND_SC_TURNED_OFF_X2),
+                              Sounds.sound_file(Sounds.SND_SC_TURNED_OFF),
                               Sounds.sound_file(Sounds.SND_SC_TURNED_OFF_X4),
                               Sounds.sound_file(Sounds.SND_SC_TURNED_OFF_X6),
                               Sounds.sound_file(Sounds.SND_SC_TURNED_OFF_X8),
-                              Sounds.sound_file(Sounds.SND_SC_TURNED_OFF_X12)]
+                              Sounds.sound_file(Sounds.SND_SC_TURNED_OFF_X12),
+                              Sounds.sound_file(Sounds.SND_DONT_MAKE_ME_CRAZY)
+                              ]
 
         self.last_turned_off = -1
+
+        self.SND_SC_READY = Sounds.sound_file('spaceship_ready2.wav')
 
     @staticmethod
     def sound_file(filename):
@@ -77,7 +90,8 @@ class Sounds:
     def engine_running(self):
         return
 
-
+    def spaceship_ready(self):
+        return self.SND_SC_READY
 
 
 
