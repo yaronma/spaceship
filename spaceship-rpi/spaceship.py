@@ -16,7 +16,8 @@ from sounds import Sounds
 from webinterface import WebInterface
 
 try:
-    import RPi.GPIO as GPIO
+    from dummyrpi import DummyRpi as GPIO 
+    # import RPi.GPIO as GPIO
 except RuntimeError:
     print("Error importing RPi.GPIO!")
 
@@ -57,7 +58,7 @@ class Buttons:
 os.environ["SDL_VIDEODRIVER"] = "dummy"
 
 # Initialize PyGame
-pygame.mixer.pre_init(44100, 16, 2, 4096)  # frequency, size, channels, buffersize
+#pygame.mixer.pre_init(44100, 16, 2, 4096)  # frequency, size, channels, buffersize
 pygame.init()
 pygame.display.set_mode((1, 1))
 
@@ -84,13 +85,14 @@ logger.debug("Spaceship application starting")
 class Spaceship:
 
     # Get current volume settings
-    volume = pygame.mixer.music.get_volume()
+    
 
     def __init__(self):
         """ Initialize our spaceship object """
 
+        self.volume = pygame.mixer.music.get_volume()
         # Turn the volume off, since on startup, there is white noise
-        pygame.mixer.music.set_volume(0.0)
+        #pygame.mixer.music.set_volume(0.0)
 
         # The RPi Indicators
         # The LED indicating that the spaceship app is running
@@ -159,6 +161,7 @@ class Spaceship:
 
         # Initialize the spaceship controls
         self.init()
+        #pygame.mixer.music.set_volume(self.volume)
         self.play_sound(self.sounds.spaceship_ready())
 
     def init(self):
@@ -180,7 +183,7 @@ class Spaceship:
         self.arduino.move_down_led_off()
 
         # Set the volume
-        pygame.mixer.music.set_volume(self.volume)
+        
 
     @staticmethod
     def stop_music():
@@ -299,10 +302,6 @@ class Spaceship:
     def handle_fuel_filling_timer(self):
         logger.debug("Spaceship fuel filling timer elapsed")
         self.event_count += 1
-        # Verify that the spaceship is not turned off
-        if not self.spaceship_turned_on:
-            logger.debug("Fuel filling timer: Spaceship is OFF, ignoring and aborting")
-            return
 
         # Check that the fuel is not already full
         if self.fuel_level == MAX_BARGRAPH_LEVEL:
@@ -339,9 +338,6 @@ class Spaceship:
         pass
 
     def handle_oxygen_filling_timer(self):
-        # Verify that the spaceship is not turned off
-        if not self.spaceship_turned_on:
-            return
 
         # Check that the oxygen is not already full
         if self.oxygen_level == MAX_BARGRAPH_LEVEL:
@@ -375,7 +371,7 @@ class Spaceship:
 
         # If the spaceship is not turned on, play sound
         if not self.spaceship_turned_on:
-            self.play_sound(SND_SC_TURNED_OFF)
+            self.play_sound(self.sounds.spaceship_turned_off())
             return
 
         # If the fuel level is 0, we are out of fuel...
@@ -390,7 +386,7 @@ class Spaceship:
 
         self.play_sound(SND_ENGINE_STARTING)
         self.left_engine_on = True
-        self.arduino.start_left_engine()
+      
 
 
         # If this is the first engine, the spaceship is starting to use fuel and oxygen
@@ -435,7 +431,7 @@ class Spaceship:
         # In any case play the 'Engine Starting' sound
         self.play_sound(SND_ENGINE_STARTING)
         self.right_engine_on = True
-        self.arduino.start_right_engine()
+        
 
         # If this is the first engine, the spaceship is starting to use fuel and oxygen
         if not self.left_engine_on:
@@ -463,10 +459,12 @@ class Spaceship:
 
         if self.lights_on:
             self.lights_on = False
+            self.play_sound(self.sounds.lights_off())
             self.arduino.lights_led_off()  # Turn off the lights led in the control panel
             self.arduino.lights_off()     # Turn off all the lights of the spaceship
         else:
             self.lights_on = True
+            self.play_sound(self.sounds.lights_on())
             self.arduino.lights_led_on()  # Turn on the lights led in the control panel
             self.arduino.lights_on()      # Turn on all the lights of the spaceship
 
@@ -488,7 +486,7 @@ class Spaceship:
         logger.debug("Spaceship Up button pressed")
 
         if not self.spaceship_turned_on:
-            self.play_sound(SND_SC_TURNED_OFF)
+            self.play_sound(self.sounds.spaceship_turned_off())
             return
 
         # Store the current spaceship movement
@@ -500,6 +498,7 @@ class Spaceship:
         # If the spaceship is not moving, start moving upward
         if not spaceship_moving:
             self.move_up = True
+            self.play_sound(self.sounds.spaceship_up())
             self.arduino.move_up_led_on()
             self.arduino.motor_up()
 
@@ -513,7 +512,7 @@ class Spaceship:
         logger.debug("Spaceship Down button pressed")
 
         if not self.spaceship_turned_on:
-            self.play_sound(SND_SC_TURNED_OFF)
+            self.play_sound(self.sounds.spaceship_turned_off())
             return
 
         # Store the current spaceship movement
@@ -525,6 +524,7 @@ class Spaceship:
         # If the spaceship is not moving, start moving down
         if not spaceship_moving:
             self.move_down = True
+            self.play_sound(self.sounds.spaceship_down())
             self.arduino.move_down_led_on()
             self.arduino.motor_down()
 

@@ -37,16 +37,6 @@ class Sounds:
     # Fuel is Low Sounds
     SND_LOW_FUEL_WARNING = 'low_fuel.wav'
 
-    # Lights ON/OFF
-    SND_LIGHTS_ON = ''
-    SND_LIGHTS_OFF = ''
-
-    # Movements
-    SND_SC_UP = 'spaceship_up.wav'
-    SND_SC_DOWN = 'spaceship_down.wav'
-
-
-
     def __init__(self):
         """
         Convert the sounds files to full path
@@ -63,6 +53,14 @@ class Sounds:
         self.last_turned_off = -1
 
         self.SND_SC_READY = Sounds.sound_file('spaceship_ready2.wav')
+
+        # Movements
+        self.SND_SC_UP = Sounds.sound_file('spaceship_up.wav')
+        self.SND_SC_DOWN = Sounds.sound_file('spaceship_down.wav')
+
+        # Lights Control
+        self.SND_LIGHTS_ON = Sounds.sound_file('wow.wav')
+        self.SND_LIGHTS_OFF = Sounds.sound_file('pew_pew.wav')
 
     @staticmethod
     def sound_file(filename):
@@ -93,7 +91,17 @@ class Sounds:
     def spaceship_ready(self):
         return self.SND_SC_READY
 
+    def spaceship_up(self):
+        return self.SND_SC_UP
 
+    def spaceship_down(self):
+        return self.SND_SC_DOWN
+
+    def lights_on(self):
+        return self.SND_LIGHTS_ON
+
+    def lights_off(self):
+        return self.SND_LIGHTS_OFF
 
 
 
