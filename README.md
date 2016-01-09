@@ -1,4 +1,4 @@
-# NOTICE -- This is work in progress -- Do not (!!) use this code or fragments
+# NOTICE -- This is work in progress -- Do not (!!) use this code or fragments of it!!!
 
 # Spaceship
 The root of the Spaceship Project.
