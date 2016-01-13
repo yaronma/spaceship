@@ -85,7 +85,6 @@ logger.debug("Spaceship application starting")
 class Spaceship:
 
     # Get current volume settings
-    
 
     def __init__(self):
         """ Initialize our spaceship object """
@@ -181,9 +180,6 @@ class Spaceship:
         self.arduino.fuel_led_off()
         self.arduino.move_up_led_off()
         self.arduino.move_down_led_off()
-
-        # Set the volume
-        
 
     @staticmethod
     def stop_music():

@@ -218,15 +218,8 @@ class Arduino:
         self.send_command(Arduino.CMD_CHANGE_PIN, led_id, led_state)
 
     def send_command(self, command_type, command_id, value):
-#        data = b'\x61\x2a\x01'
-#        data = bytearray([chr(command_type), chr(command_id), chr(value)])
         data = bytearray([chr(Arduino.FLAG), chr(command_type), chr(command_id), chr(value)])
-#       data = bytes([command_type, command_id, value])
-#        print(type(command_type))
-#        print(bytes([command_type, command_id, value]))
         print("Arduino: Sending: " + str(command_type) + ", " + str(command_id) + ", " + str(value))
-#        print("Binary data: ")
-#        print(data)
         print("\n")
         self.serial.write(data)
 
